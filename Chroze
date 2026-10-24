@@ -1,0 +1,399 @@
+CHROZE LUAU OBFUSCATOR — SOURCE BUNDLE
+Split each FILE section into its named path before deployment. ZIP is the easier deployment option.
+
+
+============================================================================
+FILE: index.html
+============================================================================
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090713">
+  <meta name="description" content="Chroze Luau source protection workspace.">
+  <title>CHROZE OBFUSCATOR — Luau Build Workspace</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Chroze home">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>CHROZE <i>OBFUSCATOR</i></strong><small>LUA / LUAU SOURCE PROTECTION</small></span>
+      <span class="beta">BETA</span>
+    </a>
+    <a class="header-link" href="#obfuscator">WORKSPACE <span>↗</span></a>
+  </header>
+
+  <main id="obfuscator" class="page">
+    <section class="hero">
+      <p class="eyebrow"><span class="spark">✧</span> SECURE BUILD WORKSPACE</p>
+      <h1>Protect your <span>source code.</span></h1>
+      <p class="hero-copy">Transform Lua and Luau scripts into compact, harder-to-read builds. Paste your source, choose your settings, and review the result before using it.</p>
+      <div class="quota"><span class="meter">◴</span> Local workspace <span class="quota-dot"></span> No account required</div>
+    </section>
+
+    <section class="editor-card">
+      <div class="card-head">
+        <div class="head-title"><span class="head-icon">⌘</span><span>SOURCE INPUT</span></div>
+        <div class="head-tools"><span id="inputBytes">0 bytes</span><button id="sampleBtn" class="quiet-btn" type="button">Load sample</button><button id="clearBtn" class="quiet-btn" type="button">Clear</button></div>
+      </div>
+      <textarea id="source" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="-- Paste your Lua / Luau source code here..."></textarea>
+    </section>
+
+    <section class="editor-card output-card">
+      <div class="card-head">
+        <div class="head-title"><span class="head-icon">&lt;/&gt;</span><span>PROTECTED OUTPUT</span></div>
+        <div class="head-tools"><span id="outputBytes">0 bytes</span><button id="copyBtn" class="copy-btn" type="button">▢ &nbsp; Copy</button><button id="downloadBtn" class="quiet-btn" type="button">Download .lua</button></div>
+      </div>
+      <textarea id="output" spellcheck="false" autocapitalize="off" autocomplete="off" readonly placeholder="-- Your protected build will appear here..."></textarea>
+      <div class="output-meta"><span id="checksum">SHA-256 · —</span><span id="tokenCount">Ready for your first build</span></div>
+    </section>
+
+    <section class="config-card">
+      <div class="config-title">
+        <div><p class="section-label">BUILD CONFIGURATION</p><h2>Fine-tune your protection layer</h2></div>
+        <span class="sliders-icon">☷</span>
+      </div>
+      <label class="field-label" for="preset">PROTECTION PRESET</label>
+      <div class="select-wrap"><span class="shield">♢</span><select id="preset">
+        <option value="maximum">Maximum transformation</option>
+        <option value="balanced">Balanced</option>
+        <option value="light">Lightweight</option>
+        <option value="custom">Custom settings</option>
+      </select><span class="chevron">⌄</span></div>
+
+      <div class="options">
+        <label class="option"><input id="stripComments" type="checkbox" checked><span class="checkmark"></span><span class="option-copy"><b>Comment stripping</b><small>Remove comments while preserving string literals.</small></span></label>
+        <label class="option"><input id="encodeStrings" type="checkbox" checked><span class="checkmark"></span><span class="option-copy"><b>String literal encoding</b><small>Convert quoted strings to decimal byte escapes.</small></span></label>
+        <label class="option"><input id="compact" type="checkbox" checked><span class="checkmark"></span><span class="option-copy"><b>Token-aware compaction</b><small>Reduce whitespace without merging adjacent tokens.</small></span></label>
+        <label class="option"><input id="banner" type="checkbox" checked><span class="checkmark"></span><span class="option-copy"><b>Chroze attribution banner</b><small>Add “this file was protected by Chroze”.</small></span></label>
+      </div>
+
+      <div class="runtime-info">
+        <div><span>Target runtime</span><strong class="runtime">Lua / Luau</strong></div>
+        <div><span>Output format</span><strong>Single file (.lua)</strong></div>
+      </div>
+      <button id="buildBtn" class="build-btn" type="button"><span class="play">▶</span><span id="buildText">Compile &amp; Protect</span><span class="arrow">↗</span></button>
+      <p id="status" class="status" role="status">Ready for your first build.</p>
+    </section>
+
+    <section class="status-stack" aria-label="Build information">
+      <div class="status-tile"><span class="tile-icon lock">♙</span><span>Input is processed by this app's API and is not intentionally stored.</span></div>
+      <div class="status-tile"><span class="tile-icon bolt">ϟ</span><span id="buildStatus">Ready for your first build</span></div>
+      <div class="status-tile"><span class="tile-icon nodes">⑂</span><span>Deterministic lexical pipeline enabled</span></div>
+    </section>
+
+    <footer>CHROZE OBFUSCATOR <span>·</span> Review and test generated code before production use.</footer>
+  </main>
+</body>
+</html>
+
+============================================================================
+FILE: style.css
+============================================================================
+
+:root{color-scheme:dark;--bg:#080713;--panel:#10101e;--panel2:#121225;--line:#25243a;--text:#f2efff;--muted:#89879f;--purple:#8e49ff;--blue:#315eff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 18%,#1a0d35 0,transparent 36%),radial-gradient(ellipse at 95% 52%,#0b1833 0,transparent 38%),var(--bg);color:var(--text);overflow-x:hidden}.ambient{position:fixed;pointer-events:none;filter:blur(90px);opacity:.16;z-index:-1}.ambient-a{width:300px;height:300px;top:150px;left:-140px;background:#7b2dff}.ambient-b{width:280px;height:300px;right:-160px;top:620px;background:#285dff}
+.site-header{height:92px;border-bottom:1px solid #242137;background:#0a0814d9;display:flex;align-items:center;justify-content:space-between;padding:0 max(28px,calc((100vw - 1180px)/2));gap:18px}.brand{display:flex;align-items:center;gap:13px;color:inherit;text-decoration:none;min-width:0}.brand-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:17px;background:linear-gradient(145deg,#a347ff,#4167ff);box-shadow:0 8px 28px #673cff55;font-size:31px;color:white}.brand-text{display:flex;flex-direction:column;gap:6px}.brand-text strong{font-size:18px;letter-spacing:.13em;white-space:nowrap}.brand-text i{font-style:normal;color:#b99aff}.brand-text small{font-size:10px;letter-spacing:.2em;color:#77738f}.beta{font-size:10px;letter-spacing:.12em;border:1px solid #55437d;border-radius:5px;padding:5px 7px;color:#c6aaff}.header-link{font-size:10px;letter-spacing:.15em;color:#aaa5c3;text-decoration:none}.header-link span{color:#a77aff;font-size:15px;margin-left:6px}
+.page{max-width:1000px;margin:0 auto;padding:55px 26px 32px}.hero{padding:0 0 26px}.eyebrow,.section-label{font-size:12px;font-weight:800;letter-spacing:.24em;color:#c1a3ff;margin:0 0 18px}.spark{font-size:20px;margin-right:8px}.hero h1{font-size:clamp(36px,6vw,58px);line-height:1.07;letter-spacing:-.055em;margin:0 0 18px;font-weight:800}.hero h1 span{background:linear-gradient(95deg,#c08aff,#8cafff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero-copy{max-width:650px;color:#9a97af;line-height:1.7;font-size:16px;margin:0}.quota{display:flex;align-items:center;gap:10px;color:#88849f;font-size:13px;margin-top:25px}.meter{color:#76d7f0;font-size:21px}.quota-dot{width:4px;height:4px;background:#514a69;border-radius:50%}
+.editor-card,.config-card{border:1px solid #28263b;border-radius:25px;background:linear-gradient(145deg,#11101fef,#0e0e1af5);overflow:hidden;box-shadow:0 16px 50px #00000014;margin-top:20px}.card-head{min-height:65px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 25px;border-bottom:1px solid #26243a}.head-title{display:flex;align-items:center;gap:13px;font-size:12px;font-weight:800;letter-spacing:.2em;color:#aaa6c0;white-space:nowrap}.head-icon{font-size:19px;color:#a99acb;letter-spacing:0}.head-tools{display:flex;align-items:center;gap:14px;color:#6e6b83;font-size:12px}.quiet-btn,.copy-btn{border:1px solid transparent;background:transparent;color:#9c97b3;padding:8px 10px;border-radius:10px;font-size:12px;cursor:pointer;white-space:nowrap}.quiet-btn:hover{border-color:#37324f;color:white}.copy-btn{border-color:#343149;color:#c4bfd7;padding:9px 13px}.copy-btn:hover{background:#201b35;border-color:#66518c}
+textarea{display:block;width:100%;height:370px;resize:vertical;border:0;outline:0;background:#0d0c19;color:#d6d0ed;padding:25px 28px;font:15px/1.85 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2;white-space:pre;overflow:auto}textarea::placeholder{color:#69657c}.output-card textarea{height:340px}.output-meta{min-height:44px;padding:10px 25px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #242237;color:#6e6a84;font-size:11px}
+.config-card{padding:28px 30px 24px;margin-top:24px}.config-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.section-label{font-size:11px;color:#aaa1c9;margin:0 0 9px}.config-title h2{font-size:19px;font-weight:550;margin:0;color:#c7c2da}.sliders-icon{font-size:27px;color:#85809d}.field-label{display:block;font-size:11px;font-weight:800;letter-spacing:.15em;color:#8f8aa8;margin-bottom:13px}.select-wrap{height:62px;position:relative;display:flex;align-items:center;border:1px solid #4b3478;background:linear-gradient(100deg,#21163c,#1c1938);border-radius:16px;padding:0 18px;box-shadow:inset 0 0 0 1px #342353}.shield{color:#c3a5ff;font-size:23px;margin-right:14px}.select-wrap select{appearance:none;flex:1;min-width:0;background:transparent;border:0;outline:0;color:#e6dfff;font-size:16px;font-weight:650}.select-wrap option{background:#151225;color:#fff}.chevron{font-size:22px;color:#9c91bc;pointer-events:none}
+.options{padding:23px 6px 25px;display:grid;gap:4px}.option{display:flex;align-items:flex-start;gap:17px;padding:17px 9px;cursor:pointer;position:relative}.option input{position:absolute;opacity:0;width:24px;height:24px;left:9px;top:18px;cursor:pointer}.checkmark{width:25px;height:25px;flex:none;border-radius:7px;border:1px solid #60527f;background:#171426;display:grid;place-items:center;color:transparent;box-shadow:0 0 0 3px #0000000a}.option input:checked+.checkmark{background:linear-gradient(135deg,#a13fff,#7252ff);border-color:#a77aff;color:#fff;box-shadow:0 4px 15px #8245ff35}.option input:checked+.checkmark:after{content:"✓";font-size:16px;font-weight:900}.option-copy b{display:block;font-size:15px;font-weight:650;color:#d5d0e5;margin:0 0 7px}.option-copy small{display:block;font-size:13px;color:#77738f;line-height:1.5}.runtime-info{border-top:1px solid #29263d;padding:23px 0 20px;display:grid;gap:18px}.runtime-info>div{display:flex;align-items:center;justify-content:space-between;gap:15px;color:#9c98af;font-size:14px}.runtime-info strong{font-weight:500;color:#d6d0e9;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.runtime-info .runtime{color:#66d7e9}.build-btn{height:66px;width:100%;display:flex;align-items:center;justify-content:center;gap:13px;border:0;border-radius:17px;background:linear-gradient(105deg,#8d21ff 0%,#6243ff 48%,#1e65ff 100%);box-shadow:0 10px 27px #5524ff3a;color:#fff;font-size:16px;font-weight:750;cursor:pointer;transition:filter .15s,transform .15s}.build-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.build-btn:disabled{opacity:.6;cursor:wait;transform:none}.play{font-size:15px}.arrow{position:absolute;right:calc(50% - 250px);font-size:17px;opacity:.7}.status{font-size:12px;line-height:1.5;color:#7e7998;margin:14px 0 0;text-align:center;min-height:18px}.status.success{color:#7ce2c4}.status.error{color:#ff9aab}
+.status-stack{display:grid;gap:14px;margin-top:24px}.status-tile{display:flex;align-items:center;gap:15px;min-height:64px;padding:14px 19px;border:1px solid #242237;border-radius:17px;background:#11101eab;color:#89859d;font-size:14px}.tile-icon{font-size:20px}.lock{color:#5fd4b3}.bolt{color:#ffdc4b}.nodes{color:#8fb6ff}footer{text-align:center;color:#57536e;font-size:10px;letter-spacing:.08em;padding:30px 0 5px}footer span{color:#9e7aff;margin:0 6px}
+@media(min-width:850px){.page{padding-top:66px}.hero{padding-bottom:33px}.editor-card textarea{height:390px}.output-card textarea{height:360px}.options{grid-template-columns:1fr 1fr;column-gap:20px}.option{padding:20px 9px}}
+@media(max-width:600px){.site-header{height:84px;padding:0 18px}.brand{gap:9px}.brand-icon{width:45px;height:45px;border-radius:14px;font-size:27px}.brand-text strong{font-size:13px;letter-spacing:.1em}.brand-text small{font-size:8px;letter-spacing:.13em}.beta,.header-link{display:none}.page{padding:48px 17px 26px}.hero h1{font-size:39px}.hero-copy{font-size:15px}.card-head{padding:0 15px;min-height:59px;flex-wrap:wrap}.head-title{font-size:10px;gap:8px}.head-tools{gap:3px;font-size:10px}.quiet-btn{font-size:10px;padding:7px 5px}.copy-btn{font-size:10px;padding:8px}.editor-card textarea{height:330px;padding:20px 18px;font-size:14px}.output-card textarea{height:310px}.output-meta{padding:10px 15px;font-size:10px;flex-wrap:wrap}.config-card{padding:23px 18px 19px;border-radius:22px}.config-title h2{font-size:17px}.select-wrap{height:58px}.select-wrap select{font-size:14px}.options{padding:18px 0 20px}.option{padding:16px 5px;gap:13px}.option-copy b{font-size:14px}.option-copy small{font-size:12px}.runtime-info>div{font-size:13px}.build-btn{height:62px;font-size:15px}.arrow{position:static;margin-left:4px}.status-tile{font-size:12px;min-height:60px;padding:13px 14px}}
+
+============================================================================
+FILE: app.js
+============================================================================
+
+"use strict";
+const $ = (id) => document.getElementById(id);
+const source = $("source"), output = $("output"), status = $("status");
+const buildBtn = $("buildBtn"), buildText = $("buildText");
+const sample = `-- Player movement controller
+local speed = 16
+local player = game.Players.LocalPlayer
+
+local function move(direction)
+    player.Character:MoveTo(player.Character.PrimaryPart.Position + direction * speed)
+end
+
+move(Vector3.new(1, 0, 0))`;
+
+function bytes(text) { return new TextEncoder().encode(text).length; }
+function updateCounts() {
+  $("inputBytes").textContent = `${bytes(source.value).toLocaleString()} bytes`;
+  $("outputBytes").textContent = `${bytes(output.value).toLocaleString()} bytes`;
+}
+function setStatus(message, kind = "") {
+  status.textContent = message;
+  status.className = "status" + (kind ? " " + kind : "");
+}
+function options() {
+  return {
+    stripComments: $("stripComments").checked,
+    encodeStrings: $("encodeStrings").checked,
+    compact: $("compact").checked,
+    addBanner: $("banner").checked
+  };
+}
+function applyPreset() {
+  const p = $("preset").value;
+  if (p === "maximum") {
+    $("stripComments").checked = true; $("encodeStrings").checked = true;
+    $("compact").checked = true; $("banner").checked = true;
+  } else if (p === "balanced") {
+    $("stripComments").checked = true; $("encodeStrings").checked = true;
+    $("compact").checked = true; $("banner").checked = false;
+  } else if (p === "light") {
+    $("stripComments").checked = true; $("encodeStrings").checked = false;
+    $("compact").checked = false; $("banner").checked = true;
+  }
+}
+$("preset").addEventListener("change", applyPreset);
+["stripComments","encodeStrings","compact","banner"].forEach(id => {
+  $(id).addEventListener("change", () => { if ($("preset").value !== "custom") $("preset").value = "custom"; });
+});
+source.addEventListener("input", updateCounts);
+$("sampleBtn").addEventListener("click", () => {
+  source.value = sample; updateCounts(); setStatus("Sample loaded. Tap Compile & Protect to test the workspace.");
+});
+$("clearBtn").addEventListener("click", () => {
+  source.value = ""; output.value = ""; $("checksum").textContent = "SHA-256 · —";
+  $("tokenCount").textContent = "Ready for your first build"; updateCounts();
+  setStatus("Input and output cleared."); $("buildStatus").textContent = "Ready for your first build";
+});
+$("buildBtn").addEventListener("click", async () => {
+  if (!source.value.trim()) { setStatus("Paste your Lua / Luau source first.", "error"); source.focus(); return; }
+  buildBtn.disabled = true; buildText.textContent = "Building…"; setStatus("Transforming source…");
+  try {
+    const response = await fetch("/api/obfuscate", {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({code: source.value, options: options()})
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || `Build failed (${response.status}).`);
+    output.value = data.output;
+    $("checksum").textContent = "SHA-256 · " + data.checksum.slice(0, 20) + "…";
+    $("tokenCount").textContent = `${data.tokenCount.toLocaleString()} tokens processed`;
+    $("buildStatus").textContent = `Last build complete · ${data.outputBytes.toLocaleString()} bytes`;
+    updateCounts();
+    setStatus("Build complete. This is lexical transformation, not a full AST or virtual-machine compiler.", "success");
+  } catch (err) {
+    setStatus(err.message || "Build failed. Check the Vercel function logs.", "error");
+  } finally { buildBtn.disabled = false; buildText.textContent = "Compile & Protect"; }
+});
+$("copyBtn").addEventListener("click", async () => {
+  if (!output.value) { setStatus("There is no output to copy yet.", "error"); return; }
+  try { await navigator.clipboard.writeText(output.value); setStatus("Protected output copied to clipboard.", "success"); }
+  catch { output.focus(); output.select(); setStatus("Clipboard blocked; output selected so you can copy it manually.", "error"); }
+});
+$("downloadBtn").addEventListener("click", () => {
+  if (!output.value) { setStatus("Build your output first.", "error"); return; }
+  const blob = new Blob([output.value], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob); const a = document.createElement("a");
+  a.href = url; a.download = "chroze-protected.lua"; a.click(); URL.revokeObjectURL(url);
+});
+updateCounts();
+
+============================================================================
+FILE: api/obfuscate.js
+============================================================================
+
+"use strict";
+const crypto = require("node:crypto");
+const { transform } = require("../lib/luau");
+
+module.exports = (req, res) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: "Use POST for this endpoint." });
+  }
+  try {
+    const body = req.body || {};
+    if (typeof body.code !== "string") return res.status(400).json({ error: "Source code must be text." });
+    const result = transform(body.code, body.options || {});
+    const checksum = crypto.createHash("sha256").update(result.output, "utf8").digest("hex");
+    return res.status(200).json({
+      output: result.output, checksum, tokenCount: result.tokenCount,
+      outputBytes: Buffer.byteLength(result.output, "utf8"),
+      note: "Lexical source transformation only; review and test the output."
+    });
+  } catch (error) {
+    return res.status(400).json({ error: error.message || "Unable to transform this source." });
+  }
+};
+
+============================================================================
+FILE: api/validate.js
+============================================================================
+
+"use strict";
+const { validate } = require("../lib/luau");
+module.exports = (req, res) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: "Use POST for this endpoint." });
+  }
+  return res.status(200).json(validate((req.body || {}).code));
+};
+
+============================================================================
+FILE: lib/luau.js
+============================================================================
+
+"use strict";
+const MULTI = ["...", "//=", "..=", "==", "~=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "^=", "//", "..", "::", "->", "??", "?.", "<<", ">>"].sort((a,b)=>b.length-a.length);
+
+function longOpen(s, i) { const m = /^\[(=*)\[/.exec(s.slice(i)); return m ? {eq:m[1],len:m[0].length} : null; }
+function readQuoted(s, start) {
+  const q=s[start]; let i=start+1;
+  while(i<s.length) {
+    if(s[i]===q) return {text:s.slice(start,i+1),end:i+1};
+    if(s[i]==="\n"||s[i]==="\r") throw Error(`Unescaped newline in string at character ${start+1}.`);
+    if(s[i]==="\\") { i++; if(i<s.length) { if(s[i]==="\r"&&s[i+1]==="\n") i+=2; else i++; } }
+    else i++;
+  }
+  throw Error(`Unterminated string at character ${start+1}.`);
+}
+function readLong(s,start) {
+  const o=longOpen(s,start); if(!o) return null;
+  const close="]"+o.eq+"]", at=s.indexOf(close,start+o.len);
+  if(at<0) throw Error(`Unterminated long string/comment at character ${start+1}.`);
+  return {text:s.slice(start,at+close.length),end:at+close.length,openLength:o.len,closeLength:close.length};
+}
+function readComment(s,start) {
+  const o=longOpen(s,start+2);
+  if(!o) { let e=start+2; while(e<s.length&&s[e]!=="\n"&&s[e]!=="\r")e++; return {text:s.slice(start,e),end:e,long:false}; }
+  const close="]"+o.eq+"]",at=s.indexOf(close,start+2+o.len);
+  if(at<0) throw Error(`Unterminated long comment at character ${start+1}.`);
+  return {text:s.slice(start,at+close.length),end:at+close.length,long:true};
+}
+function readTemplate(s,start) {
+  let i=start+1;
+  while(i<s.length) {
+    if(s[i]==="\\") { i+=2; continue; }
+    if(s[i]==="`") return {text:s.slice(start,i+1),end:i+1};
+    if(s[i]==="{" ) {
+      let depth=1; i++;
+      while(i<s.length&&depth) {
+        if(s[i]==='"'||s[i]==="'") { i=readQuoted(s,i).end; continue; }
+        if(s[i]==="-"&&s[i+1]==="-") { i=readComment(s,i).end; continue; }
+        if(s[i]==="{") depth++; else if(s[i]==="}") depth--;
+        i++;
+      }
+      if(depth) throw Error(`Unterminated template expression at character ${start+1}.`);
+    } else i++;
+  }
+  throw Error(`Unterminated interpolated string at character ${start+1}.`);
+}
+function tokenize(s) {
+  const out=[]; let i=0;
+  while(i<s.length) {
+    const start=i,c=s[i];
+    if(/\s/.test(c)){i++;while(i<s.length&&/\s/.test(s[i]))i++;out.push({kind:"space",text:s.slice(start,i)});continue;}
+    if(c==="-"&&s[i+1]==="-"){const x=readComment(s,i);i=x.end;out.push({kind:"comment",...x});continue;}
+    if(c==='"'||c==="'"){const x=readQuoted(s,i);i=x.end;out.push({kind:"string",text:x.text});continue;}
+    if(c==="`"){const x=readTemplate(s,i);i=x.end;out.push({kind:"template",text:x.text});continue;}
+    if(c==="["){const x=readLong(s,i);if(x){i=x.end;out.push({kind:"longstring",...x});continue;}}
+    if(/[A-Za-z_]/.test(c)){i++;while(i<s.length&&/[A-Za-z0-9_]/.test(s[i]))i++;out.push({kind:"word",text:s.slice(start,i)});continue;}
+    if(/\d/.test(c)||(c==="."&&/\d/.test(s[i+1]||""))){
+      const m=/^(?:0[xX][0-9a-fA-F_]+(?:\.[0-9a-fA-F_]*)?(?:[pP][+-]?[0-9_]+)?|(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?[\d_]+)?)/.exec(s.slice(i));
+      if(m){let t=m[0];if(t.endsWith(".")&&s[i+t.length]===".")t=t.slice(0,-1);i+=t.length;out.push({kind:"number",text:t});continue;}
+    }
+    const op=MULTI.find(x=>s.startsWith(x,i)); if(op){i+=op.length;out.push({kind:"symbol",text:op});continue;}
+    i++;out.push({kind:"symbol",text:c});
+  }
+  return out;
+}
+function bytesFromQuoted(raw) {
+  const body=raw.slice(1,-1), out=[];
+  for(let i=0;i<body.length;) {
+    if(body[i]!=="\\"){const cp=body.codePointAt(i),str=String.fromCodePoint(cp);out.push(...Buffer.from(str,"utf8"));i+=str.length;continue;}
+    i++; if(i>=body.length)throw Error("Invalid trailing string escape.");
+    const e=body[i++],simple={a:7,b:8,f:12,n:10,r:13,t:9,v:11,"\\":92,'"':34,"'":39};
+    if(Object.prototype.hasOwnProperty.call(simple,e)){out.push(simple[e]);continue;}
+    if(e==="z"){while(i<body.length&&/\s/.test(body[i]))i++;continue;}
+    if(e==="x"){const h=body.slice(i,i+2);if(!/^[\da-fA-F]{2}$/.test(h))throw Error("Invalid hexadecimal string escape.");out.push(parseInt(h,16));i+=2;continue;}
+    if(e==="u"&&body[i]==="{"){const end=body.indexOf("}",i+1);if(end<0)throw Error("Invalid Unicode string escape.");const h=body.slice(i+1,end);if(!/^[\da-fA-F]+$/.test(h))throw Error("Invalid Unicode string escape.");const cp=parseInt(h,16);if(cp>0x10ffff||(cp>=0xd800&&cp<=0xdfff))throw Error("Unicode escape out of range.");out.push(...Buffer.from(String.fromCodePoint(cp),"utf8"));i=end+1;continue;}
+    if(/\d/.test(e)){let d=e;while(i<body.length&&d.length<3&&/\d/.test(body[i]))d+=body[i++];const n=Number(d);if(n>255)throw Error("Decimal string escape exceeds 255.");out.push(n);continue;}
+    if(e==="\r"||e==="\n"){if(e==="\r"&&body[i]==="\n")i++;out.push(10);continue;}
+    out.push(...Buffer.from(e,"utf8"));
+  }
+  return out;
+}
+function bytesFromLong(t) {
+  let body=t.text.slice(t.openLength,t.text.length-t.closeLength).replace(/\r\n?/g,"\n");
+  if(body.startsWith("\n"))body=body.slice(1);
+  return [...Buffer.from(body,"utf8")];
+}
+function encoded(bytes){return '"'+bytes.map(n=>"\\"+String(n).padStart(3,"0")).join("")+'"';}
+function needsSpace(a,b) {
+  if(!a||!b)return false;
+  if(["word","number","string","longstring","template"].includes(a.kind)&&["word","number","string","longstring","template"].includes(b.kind))return true;
+  if(a.kind==="number"&&b.text.startsWith("."))return true;
+  const joined=a.text+b.text;
+  try {const ts=tokenize(joined).filter(t=>t.kind!=="space");return ts.length!==2||ts[0].text!==a.text||ts[1].text!==b.text;} catch{return true;}
+}
+function transform(source,opts={}) {
+  if(typeof source!=="string")throw Error("Source must be text.");
+  if(!source.trim())throw Error("Paste your Lua / Luau source first.");
+  if(source.length>150000)throw Error("Source is too large. Limit: 150,000 characters.");
+  const settings={stripComments:opts.stripComments!==false,encodeStrings:opts.encodeStrings===true,compact:opts.compact!==false,addBanner:opts.addBanner!==false};
+  const tokens=tokenize(source), out=[]; let previous=null;
+  for(const t of tokens) {
+    if(t.kind==="space") {if(!settings.compact)out.push(t.text);continue;}
+    if(t.kind==="comment") {if(!settings.stripComments) {out.push(t.text);if(!t.long)out.push("\n");previous=null;}continue;}
+    if(settings.encodeStrings&&t.kind==="string"){t.text=encoded(bytesFromQuoted(t.text));t.kind="string";}
+    else if(settings.encodeStrings&&t.kind==="longstring"){t.text=encoded(bytesFromLong(t));t.kind="string";}
+    if(settings.compact&&previous&&needsSpace(previous,t))out.push(" ");
+    out.push(t.text);previous=t;
+  }
+  let result=out.join("");
+  if(settings.addBanner)result="-- this file was protected by Chroze\n"+result;
+  return {output:result,tokenCount:tokens.filter(t=>t.kind!=="space"&&t.kind!=="comment").length,settings};
+}
+function validate(source) {
+  if(typeof source!=="string"||!source.trim())return {valid:false,message:"Paste your source code first."};
+  let tokens;try{tokens=tokenize(source);}catch(e){return {valid:false,message:e.message};}
+  const pairs={"(":")","[":"]","{":"}"},stack=[];
+  for(const t of tokens){if(t.kind!=="symbol")continue;if(pairs[t.text])stack.push(pairs[t.text]);else if([")","]","}"].includes(t.text)){if(stack.pop()!==t.text)return {valid:false,message:`Mismatched closing delimiter ${t.text}.`};}}
+  if(stack.length)return {valid:false,message:`Missing closing delimiter ${stack[stack.length-1]}.`};
+  return {valid:true,message:"String, comment, and delimiter checks passed. This is not a full Lua/Luau parser."};
+}
+module.exports={tokenize,transform,validate};
+
+============================================================================
+FILE: package.json
+============================================================================
+
+{
+  "name": "chroze-luau-obfuscator",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Chroze Lua/Luau source transformation workspace",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}
+
+============================================================================
+FILE: vercel.json
+============================================================================
+
+{
+  "version": 2,
+  "cleanUrls": true
+}
+
+============================================================================
+FILE: README.md
+=======================================================================
