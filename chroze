@@ -1,0 +1,667 @@
+{
+  "name": "chroze-luau-obfuscator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A lightweight, Vercel-ready Luau source transformer.",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "deploy": "npx vercel --prod"
+  }
+}
+
+{
+  "version": 2,
+  "cleanUrls": true
+}
+
+node_modules/
+.vercel/
+.env*
+.DS_Store
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="A browser-based Luau source obfuscation utility.">
+  <title>Chroze Luau Obfuscator</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">C</div>
+      <div class="brand-copy">
+        <p class="eyebrow">LUAU SOURCE TOOL</p>
+        <h1>Chroze <span>Obfuscator</span></h1>
+      </div>
+      <span class="version">BROWSER APP</span>
+    </header>
+
+    <section class="intro">
+      <p class="kicker">SOURCE TRANSFORMATION</p>
+      <h2>Make your Luau source harder to read.</h2>
+      <p class="intro-copy">Compact source, remove comments, and encode string literals. Paste code, transform it, then review the result before using it.</p>
+    </section>
+
+    <section class="workspace" aria-label="Obfuscator workspace">
+      <div class="pane">
+        <div class="pane-header"><label for="source">INPUT SOURCE</label><span id="inputCount">0 characters</span></div>
+        <textarea id="source" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Paste your Luau code here..."></textarea>
+        <div class="pane-footer">
+          <button id="loadSample" class="text-button" type="button">Load sample</button>
+          <button id="clearInput" class="text-button" type="button">Clear input</button>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-header"><label for="output">OUTPUT</label><span id="outputCount">Waiting for code</span></div>
+        <textarea id="output" spellcheck="false" autocomplete="off" autocapitalize="off" readonly placeholder="Your transformed Luau code will appear here..."></textarea>
+        <div class="pane-footer output-footer">
+          <span id="outputHash" class="hash">SHA-256: —</span>
+          <div class="output-actions">
+            <button id="copyOutput" class="text-button" type="button">Copy</button>
+            <button id="downloadOutput" class="text-button" type="button">Download .lua</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="controls-title"><div><p class="kicker">TRANSFORM OPTIONS</p><h3>Protection settings</h3></div><span class="subtle">No third-party runtime dependency</span></div>
+      <div class="option-grid">
+        <label class="option"><input id="encodeStrings" type="checkbox" checked><span><b>Encode strings</b><small>Convert string literal bytes to decimal escapes.</small></span></label>
+        <label class="option"><input id="stripComments" type="checkbox" checked><span><b>Remove comments</b><small>Strip Lua line and long comments.</small></span></label>
+        <label class="option"><input id="compact" type="checkbox" checked><span><b>Compact output</b><small>Remove redundant whitespace safely between tokens.</small></span></label>
+        <label class="option"><input id="addBanner" type="checkbox" checked><span><b>Add protection banner</b><small>Prefix the output with the Chroze attribution comment.</small></span></label>
+      </div>
+      <div class="actions">
+        <button id="validateButton" class="secondary-button" type="button">Check delimiters</button>
+        <button id="obfuscateButton" class="primary-button" type="button"><span>Transform source</span><span aria-hidden="true">↗</span></button>
+      </div>
+      <p id="status" class="status" role="status">Ready. Source is sent to this app's API only when you click a button.</p>
+    </section>
+
+    <aside class="notice">
+      <strong>Important limitations</strong>
+      <p>This is a lightweight lexical transformer, not Clyde's full AST/VM pipeline. String escapes are reversible and this tool does not include Luraph's leaked proprietary anti-tamper code or executor/environment checks. Client-side obfuscation cannot make code impossible to reverse-engineer.</p>
+    </aside>
+    <footer class="footer">Chroze Luau Obfuscator · Review generated code before production use.</footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>
+
+:root{color-scheme:dark;--bg:#090909;--panel:#111;--panel2:#151515;--line:#292929;--text:#f3f3f3;--muted:#949494;--accent:#fff;--danger:#ff9c9c;--ok:#a8e6bb;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#202020 0,transparent 45%),var(--bg);color:var(--text);min-height:100vh}.shell{max-width:1200px;margin:0 auto;padding:30px 24px 22px}.topbar{display:flex;align-items:center;gap:13px;padding:5px 0 25px;border-bottom:1px solid var(--line)}.brand-mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid #535353;border-radius:13px;background:#f1f1f1;color:#080808;font-size:25px;font-weight:900;box-shadow:0 0 28px #ffffff12}.brand-copy .eyebrow,.kicker{font-size:10px;font-weight:800;letter-spacing:.16em;color:#a7a7a7;margin:0 0 6px}.brand-copy h1{font-size:19px;letter-spacing:-.04em;margin:0;font-weight:800}.brand-copy h1 span{color:#9a9a9a;font-weight:500}.version{margin-left:auto;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:#b3b3b3;font-size:10px;letter-spacing:.1em}.intro{padding:33px 0 25px;max-width:760px}.intro .kicker{margin-bottom:10px}.intro h2{font-size:clamp(25px,4vw,39px);line-height:1.08;letter-spacing:-.055em;margin:0 0 12px}.intro-copy{max-width:660px;color:var(--muted);line-height:1.65;font-size:14px;margin:0}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{background:linear-gradient(180deg,#121212,#0d0d0d);border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}.pane-header{height:45px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 14px}.pane-header label{font-size:10px;letter-spacing:.13em;font-weight:800;color:#d2d2d2}.pane-header span{font-size:11px;color:var(--muted)}textarea{display:block;width:100%;height:340px;resize:vertical;background:#0d0d0d;color:#e8e8e8;border:0;outline:0;padding:16px;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2}textarea::placeholder{color:#555}.pane-footer{min-height:46px;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);background:#101010}.text-button{background:none;border:0;color:#bdbdbd;padding:5px 4px;font-size:11px;cursor:pointer}.text-button:hover{color:white}.output-footer{align-items:center}.hash{font-size:10px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}.output-actions{display:flex;gap:7px;align-items:center}.controls{background:var(--panel);border:1px solid var(--line);border-radius:15px;margin-top:15px;padding:18px 18px 14px}.controls-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:15px}.controls-title h3{font-size:17px;letter-spacing:-.025em;margin:0}.subtle{font-size:11px;color:#777}.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.option{display:flex;gap:11px;align-items:flex-start;padding:13px;border:1px solid #292929;border-radius:11px;background:#0e0e0e;cursor:pointer}.option input{accent-color:white;margin:2px 0 0;width:15px;height:15px;flex:none}.option b{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.option small{display:block;color:#888;font-size:11px;line-height:1.45}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:17px}.primary-button,.secondary-button{display:inline-flex;align-items:center;justify-content:center;gap:16px;border-radius:9px;padding:11px 15px;font-weight:700;font-size:12px;cursor:pointer}.primary-button{background:#f5f5f5;border:1px solid #f5f5f5;color:#080808;min-width:170px}.primary-button:hover{background:#dcdcdc}.secondary-button{background:#191919;border:1px solid #393939;color:#e0e0e0}.secondary-button:hover{background:#242424}.primary-button:disabled,.secondary-button:disabled{opacity:.45;cursor:wait}.status{font-size:11px;color:#888;margin:13px 0 0;line-height:1.5}.status.error{color:var(--danger)}.status.success{color:var(--ok)}.notice{margin-top:15px;border:1px solid #343434;background:#0d0d0d;border-radius:12px;padding:14px 16px}.notice strong{font-size:11px;letter-spacing:.02em}.notice p{color:#898989;font-size:11px;line-height:1.65;margin:6px 0 0}.footer{text-align:center;color:#555;font-size:10px;padding:22px 0 0}.spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:760px){.shell{padding:17px 13px}.workspace{grid-template-columns:1fr}.intro{padding-top:26px}.pane textarea{height:285px}.option-grid{grid-template-columns:1fr}.controls{padding:15px}.controls-title{align-items:start;flex-direction:column}.version{display:none}.hash{max-width:45%}}@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+
+'use strict';
+
+const byId = (id) => document.getElementById(id);
+const source = byId('source');
+const output = byId('output');
+const status = byId('status');
+const obfuscateButton = byId('obfuscateButton');
+const validateButton = byId('validateButton');
+
+const sample = `local function greet(name: string): string
+    local message = "Hello, " .. name .. "!"
+    print(message)
+    return message
+end
+
+greet("Luau")`;
+
+function setStatus(message, kind = '') {
+  status.textContent = message;
+  status.className = 'status' + (kind ? ` ${kind}` : '');
+}
+
+function updateCounts() {
+  byId('inputCount').textContent = `${source.value.length.toLocaleString()} characters`;
+  byId('outputCount').textContent = output.value ? `${output.value.length.toLocaleString()} characters` : 'Waiting for code';
+}
+
+function currentOptions() {
+  return {
+    encodeStrings: byId('encodeStrings').checked,
+    stripComments: byId('stripComments').checked,
+    compact: byId('compact').checked,
+    addBanner: byId('addBanner').checked
+  };
+}
+
+async function sendJson(url, payload) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  let data;
+  try { data = await response.json(); } catch { data = {}; }
+  if (!response.ok) throw new Error(data.error || `Request failed (${response.status}).`);
+  return data;
+}
+
+obfuscateButton.addEventListener('click', async () => {
+  if (!source.value.trim()) {
+    setStatus('Paste your Luau source code first.', 'error');
+    source.focus();
+    return;
+  }
+  obfuscateButton.disabled = true;
+  validateButton.disabled = true;
+  obfuscateButton.querySelector('span').textContent = 'Working…';
+  setStatus('Transforming source…');
+  try {
+    const data = await sendJson('/api/obfuscate', { code: source.value, options: currentOptions() });
+    output.value = data.output;
+    byId('outputHash').textContent = `SHA-256: ${data.checksum}`;
+    updateCounts();
+    setStatus(`Done · ${data.tokenCount.toLocaleString()} tokens transformed. ${data.note}`, 'success');
+  } catch (error) {
+    setStatus(error.message || 'Transformation failed.', 'error');
+  } finally {
+    obfuscateButton.disabled = false;
+    validateButton.disabled = false;
+    obfuscateButton.querySelector('span').textContent = 'Transform source';
+  }
+});
+
+validateButton.addEventListener('click', async () => {
+  if (!source.value.trim()) {
+    setStatus('Paste your Luau source code first.', 'error');
+    source.focus();
+    return;
+  }
+  validateButton.disabled = true;
+  obfuscateButton.disabled = true;
+  setStatus('Checking strings, comments, and paired delimiters…');
+  try {
+    const data = await sendJson('/api/validate', { code: source.value });
+    setStatus(data.valid ? data.message : `Check failed: ${data.message}`, data.valid ? 'success' : 'error');
+  } catch (error) {
+    setStatus(error.message || 'Check failed.', 'error');
+  } finally {
+    validateButton.disabled = false;
+    obfuscateButton.disabled = false;
+  }
+});
+
+byId('loadSample').addEventListener('click', () => {
+  source.value = sample;
+  updateCounts();
+  setStatus('Sample loaded. Click Transform source to test the app.');
+});
+
+byId('clearInput').addEventListener('click', () => {
+  source.value = '';
+  output.value = '';
+  byId('outputHash').textContent = 'SHA-256: —';
+  updateCounts();
+  setStatus('Input and output cleared.');
+  source.focus();
+});
+
+byId('copyOutput').addEventListener('click', async () => {
+  if (!output.value) return setStatus('There is no output to copy yet.', 'error');
+  try {
+    await navigator.clipboard.writeText(output.value);
+    setStatus('Output copied to clipboard.', 'success');
+  } catch {
+    output.focus();
+    output.select();
+    setStatus('Clipboard access was blocked. Output is selected; copy it manually.', 'error');
+  }
+});
+
+byId('downloadOutput').addEventListener('click', () => {
+  if (!output.value) return setStatus('There is no output to download yet.', 'error');
+  const blob = new Blob([output.value], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'chroze-obfuscated.lua';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  setStatus('Downloaded chroze-obfuscated.lua.', 'success');
+});
+
+source.addEventListener('input', updateCounts);
+updateCounts();
+
+'use strict';
+
+const crypto = require('node:crypto');
+const { transform } = require('../lib/luau');
+
+module.exports = (req, res) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Use POST for this endpoint.' });
+  }
+  try {
+    const body = req.body || {};
+    const result = transform(body.code, body.options || {});
+    const checksum = crypto.createHash('sha256').update(result.output, 'utf8').digest('hex');
+    return res.status(200).json({
+      output: result.output,
+      checksum,
+      sourceCharacters: body.code.length,
+      outputCharacters: result.output.length,
+      tokenCount: result.tokenCount,
+      settings: result.settings,
+      note: 'This is lexical source transformation, not a full Luau AST/VM compiler. Review and test generated code before use.'
+    });
+  } catch (error) {
+    return res.status(400).json({ error: error.message || 'Unable to transform this source.' });
+  }
+};
+
+'use strict';
+
+const { validate } = require('../lib/luau');
+
+module.exports = (req, res) => {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ error: 'Use POST for this endpoint.' });
+  }
+  const body = req.body || {};
+  return res.status(200).json(validate(body.code));
+};
+
+'use strict';
+
+const MULTI_OPERATORS = [
+  '...', '//=', '..=', '==', '~=', '<=', '>=', '+=', '-=', '*=', '/=', '%=', '^=', '//', '..', '::', '->', '??', '?.', '<<', '>>'
+].sort((a, b) => b.length - a.length);
+
+function longBracketOpen(source, index) {
+  const match = /^\[(=*)\[/.exec(source.slice(index));
+  if (!match) return null;
+  return { equals: match[1], length: match[0].length };
+}
+
+function longBracketClose(source, from, equals) {
+  return source.indexOf(']' + equals + ']', from);
+}
+
+function readQuoted(source, start) {
+  const quote = source[start];
+  let i = start + 1;
+  while (i < source.length) {
+    const char = source[i];
+    if (char === quote) return { text: source.slice(start, i + 1), end: i + 1 };
+    if (char === '\n' || char === '\r') {
+      throw new Error(`Unescaped newline in quoted string at character ${start + 1}.`);
+    }
+    if (char === '\\') {
+      i++;
+      if (i >= source.length) break;
+      if (source[i] === '\r' && source[i + 1] === '\n') i += 2;
+      else i++;
+    } else {
+      i++;
+    }
+  }
+  throw new Error(`Unterminated quoted string at character ${start + 1}.`);
+}
+
+function readLongString(source, start) {
+  const open = longBracketOpen(source, start);
+  if (!open) return null;
+  const closeToken = ']' + open.equals + ']';
+  const closeAt = longBracketClose(source, start + open.length, open.equals);
+  if (closeAt < 0) throw new Error(`Unterminated long string at character ${start + 1}.`);
+  return { text: source.slice(start, closeAt + closeToken.length), end: closeAt + closeToken.length, openLength: open.length, closeLength: closeToken.length };
+}
+
+function readComment(source, start) {
+  const open = longBracketOpen(source, start + 2);
+  if (!open) {
+    let end = start + 2;
+    while (end < source.length && source[end] !== '\n' && source[end] !== '\r') end++;
+    return { text: source.slice(start, end), end, long: false };
+  }
+  const closeToken = ']' + open.equals + ']';
+  const closeAt = longBracketClose(source, start + 2 + open.length, open.equals);
+  if (closeAt < 0) throw new Error(`Unterminated long comment at character ${start + 1}.`);
+  return { text: source.slice(start, closeAt + closeToken.length), end: closeAt + closeToken.length, long: true };
+}
+
+
+function readInterpolatedExpression(source, start) {
+  let i = start;
+  let depth = 1;
+  while (i < source.length) {
+    const ch = source[i];
+    if (ch === "\"" || ch === "'") {
+      i = readQuoted(source, i).end;
+      continue;
+    }
+    if (ch === '`') {
+      i = readInterpolatedString(source, i).end;
+      continue;
+    }
+    if (ch === '-' && source[i + 1] === '-') {
+      i = readComment(source, i).end;
+      continue;
+    }
+    if (ch === '[') {
+      const longString = readLongString(source, i);
+      if (longString) {
+        i = longString.end;
+        continue;
+      }
+    }
+    if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) return i + 1;
+    }
+    i++;
+  }
+  throw new Error(`Unterminated interpolation expression at character ${start}.`);
+}
+
+function readInterpolatedString(source, start) {
+  let i = start + 1;
+  while (i < source.length) {
+    const ch = source[i];
+    if (ch === '\\') {
+      i++;
+      if (i < source.length) {
+        if (source[i] === '\r' && source[i + 1] === '\n') i += 2;
+        else i++;
+      }
+      continue;
+    }
+    if (ch === '`') return { text: source.slice(start, i + 1), end: i + 1 };
+    if (ch === '{') {
+      i = readInterpolatedExpression(source, i + 1);
+      continue;
+    }
+    i++;
+  }
+  throw new Error(`Unterminated interpolated string at character ${start + 1}.`);
+}
+
+function readNumber(source, start) {
+  const rest = source.slice(start);
+  const pattern = /^(?:0[xX][0-9a-fA-F_]+(?:\.[0-9a-fA-F_]*)?(?:[pP][+-]?[0-9_]+)?|(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?[\d_]+)?)/;
+  const match = pattern.exec(rest);
+  if (!match) return null;
+  let text = match[0];
+  // Avoid consuming the first dot of a concatenation operator such as 1..value.
+  if (text.endsWith('.') && rest[text.length] === '.') text = text.slice(0, -1);
+  return text || null;
+}
+
+function tokenize(source) {
+  const tokens = [];
+  let i = 0;
+  while (i < source.length) {
+    const start = i;
+    const ch = source[i];
+
+    if (/\s/.test(ch)) {
+      i++;
+      while (i < source.length && /\s/.test(source[i])) i++;
+      tokens.push({ kind: 'space', text: source.slice(start, i) });
+      continue;
+    }
+
+    if (ch === '-' && source[i + 1] === '-') {
+      const comment = readComment(source, i);
+      i = comment.end;
+      tokens.push({ kind: 'comment', text: comment.text, long: comment.long });
+      continue;
+    }
+
+    if (ch === '"' || ch === "'") {
+      const quoted = readQuoted(source, i);
+      i = quoted.end;
+      tokens.push({ kind: 'string', text: quoted.text });
+      continue;
+    }
+
+    if (ch === '`') {
+      const interpolated = readInterpolatedString(source, i);
+      i = interpolated.end;
+      tokens.push({ kind: 'template', text: interpolated.text });
+      continue;
+    }
+
+    if (ch === '[') {
+      const longString = readLongString(source, i);
+      if (longString) {
+        i = longString.end;
+        tokens.push({ kind: 'longstring', text: longString.text, openLength: longString.openLength, closeLength: longString.closeLength });
+        continue;
+      }
+    }
+
+    if (/[A-Za-z_]/.test(ch)) {
+      i++;
+      while (i < source.length && /[A-Za-z0-9_]/.test(source[i])) i++;
+      tokens.push({ kind: 'word', text: source.slice(start, i) });
+      continue;
+    }
+
+    if (/\d/.test(ch) || (ch === '.' && /\d/.test(source[i + 1] || ''))) {
+      const number = readNumber(source, i);
+      if (number) {
+        i += number.length;
+        tokens.push({ kind: 'number', text: number });
+        continue;
+      }
+    }
+
+    const operator = MULTI_OPERATORS.find((item) => source.startsWith(item, i));
+    if (operator) {
+      i += operator.length;
+      tokens.push({ kind: 'symbol', text: operator });
+      continue;
+    }
+
+    i++;
+    tokens.push({ kind: 'symbol', text: ch });
+  }
+  return tokens;
+}
+
+function appendUtf8Bytes(out, text) {
+  for (const byte of Buffer.from(text, 'utf8')) out.push(byte);
+}
+
+function decodeQuotedBytes(raw) {
+  const out = [];
+  const bodyEnd = raw.length - 1;
+  let i = 1;
+  while (i < bodyEnd) {
+    const ch = raw[i];
+    if (ch !== '\\') {
+      const codePoint = raw.codePointAt(i);
+      const value = String.fromCodePoint(codePoint);
+      appendUtf8Bytes(out, value);
+      i += value.length;
+      continue;
+    }
+
+    i++;
+    if (i >= bodyEnd) throw new Error('Invalid trailing escape in string literal.');
+    const escaped = raw[i];
+    const simple = {
+      a: 7, b: 8, f: 12, n: 10, r: 13, t: 9, v: 11,
+      '\\': 92, '"': 34, "'": 39
+    };
+    if (Object.prototype.hasOwnProperty.call(simple, escaped)) {
+      out.push(simple[escaped]);
+      i++;
+      continue;
+    }
+    if (escaped === '\n') {
+      out.push(10);
+      i++;
+      continue;
+    }
+    if (escaped === '\r') {
+      out.push(10);
+      i += raw[i + 1] === '\n' ? 2 : 1;
+      continue;
+    }
+    if (escaped === 'z') {
+      i++;
+      while (i < bodyEnd && /\s/.test(raw[i])) i++;
+      continue;
+    }
+    if (escaped === 'x') {
+      const hex = raw.slice(i + 1, i + 3);
+      if (!/^[0-9a-fA-F]{2}$/.test(hex)) throw new Error('Invalid \\x escape in string literal.');
+      out.push(parseInt(hex, 16));
+      i += 3;
+      continue;
+    }
+    if (escaped === 'u' && raw[i + 1] === '{') {
+      const end = raw.indexOf('}', i + 2);
+      if (end < 0) throw new Error('Invalid Unicode escape in string literal.');
+      const hex = raw.slice(i + 2, end);
+      if (!/^[0-9a-fA-F]+$/.test(hex)) throw new Error('Invalid Unicode escape in string literal.');
+      const cp = parseInt(hex, 16);
+      if (cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff)) throw new Error('Unicode escape is out of range.');
+      appendUtf8Bytes(out, String.fromCodePoint(cp));
+      i = end + 1;
+      continue;
+    }
+    if (/\d/.test(escaped)) {
+      let digits = escaped;
+      let j = i + 1;
+      while (j < bodyEnd && digits.length < 3 && /\d/.test(raw[j])) digits += raw[j++];
+      const value = parseInt(digits, 10);
+      if (value > 255) throw new Error('Decimal string escapes must be between 0 and 255.');
+      out.push(value);
+      i = j;
+      continue;
+    }
+    // Luau accepts escaped punctuation as that punctuation in a quoted string.
+    appendUtf8Bytes(out, escaped);
+    i++;
+  }
+  return out;
+}
+
+function decodeLongStringBytes(token) {
+  const openLength = token.openLength;
+  const closeLength = token.closeLength;
+  let body = token.text.slice(openLength, token.text.length - closeLength);
+  body = body.replace(/\r\n?/g, '\n');
+  if (body.startsWith('\n')) body = body.slice(1);
+  return Array.from(Buffer.from(body, 'utf8'));
+}
+
+function encodeBytesAsLuaString(bytes) {
+  return '"' + bytes.map((byte) => '\\' + String(byte).padStart(3, '0')).join('') + '"';
+}
+
+function needsSpace(previous, current) {
+  if (!previous || !current) return false;
+  const atomKinds = new Set(['word', 'number', 'string', 'longstring', 'template']);
+  if (atomKinds.has(previous.kind) && atomKinds.has(current.kind)) return true;
+  if (previous.kind === 'number' && current.text.startsWith('.')) return true;
+  const joined = previous.text + current.text;
+  try {
+    const combinedTokens = tokenize(joined).filter((token) => token.kind !== 'space');
+    return combinedTokens.length !== 2 || combinedTokens[0].text !== previous.text || combinedTokens[1].text !== current.text;
+  } catch {
+    return true;
+  }
+}
+
+function transform(source, options = {}) {
+  if (typeof source !== 'string') throw new Error('Source must be text.');
+  if (source.length === 0) throw new Error('Paste your Luau source code first.');
+  if (source.length > 150000) throw new Error('Source is too large. The current limit is 150,000 characters.');
+
+  const settings = {
+    stripComments: options.stripComments !== false,
+    encodeStrings: options.encodeStrings === true,
+    compact: options.compact !== false,
+    addBanner: options.addBanner !== false
+  };
+  const tokens = tokenize(source);
+  const transformed = [];
+
+  for (const token of tokens) {
+    if (token.kind === 'space') {
+      if (!settings.compact) transformed.push(token);
+      continue;
+    }
+    if (token.kind === 'comment') {
+      if (!settings.stripComments) transformed.push(token);
+      continue;
+    }
+    if (settings.encodeStrings && token.kind === 'string') {
+      transformed.push({ kind: 'string', text: encodeBytesAsLuaString(decodeQuotedBytes(token.text)) });
+      continue;
+    }
+    if (settings.encodeStrings && token.kind === 'longstring') {
+      transformed.push({ kind: 'string', text: encodeBytesAsLuaString(decodeLongStringBytes(token)) });
+      continue;
+    }
+    transformed.push(token);
+  }
+
+  let output = '';
+  if (!settings.compact) {
+    output = transformed.map((token) => token.text).join('');
+  } else {
+    let previous = null;
+    for (const token of transformed) {
+      if (token.kind === 'comment') {
+        if (output && !/\s$/.test(output) && needsSpace(previous, token)) output += ' ';
+        output += token.text;
+        if (!token.long && !/[\r\n]$/.test(output)) output += '\n';
+        else if (token.long && !/[\r\n]$/.test(output)) output += '\n';
+        previous = null;
+        continue;
+      }
+      if (previous && needsSpace(previous, token)) output += ' ';
+      output += token.text;
+      previous = token;
+    }
+  }
+
+  if (settings.addBanner) output = '-- this file was protected by Chroze\n' + output;
+  return { output, settings, tokenCount: tokens.filter((token) => token.kind !== 'space' && token.kind !== 'comment').length };
+}
+
+function validate(source) {
+  if (typeof source !== 'string' || source.trim().length === 0) return { valid: false, message: 'Paste your Luau source code first.' };
+  if (source.length > 150000) return { valid: false, message: 'Source is too large. The current limit is 150,000 characters.' };
+  let tokens;
+  try {
+    tokens = tokenize(source);
+  } catch (error) {
+    return { valid: false, message: error.message };
+  }
+  const stack = [];
+  const opening = { '(': ')', '[': ']', '{': '}' };
+  const closing = new Set([')', ']', '}']);
+  for (const token of tokens) {
+    if (token.kind !== 'symbol') continue;
+    if (opening[token.text]) stack.push({ expected: opening[token.text], text: token.text });
+    else if (closing.has(token.text)) {
+      const last = stack.pop();
+      if (!last || last.expected !== token.text) return { valid: false, message: `Mismatched closing delimiter "${token.text}".` };
+    }
+  }
+  if (stack.length) return { valid: false, message: `Missing closing delimiter "${stack[stack.length - 1].expected}".` };
+  return { valid: true, message: 'Lexical and delimiter checks passed. This is not a full Luau compiler or grammar validator.', tokens: tokens.filter((token) => token.kind !== 'space' && token.kind !== 'comment').length };
+}
+
+module.exports = { tokenize, transform, validate };
